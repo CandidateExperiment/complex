@@ -38,7 +38,7 @@ class ComplexCalculator
      * @param mixed $c
      *
      * @return ComplexCalculator
-     * @throws LogicException if the argument is not numeric or Complex.
+     * @throws LogicException Если аргумент не число или не экземпляр ComplexCalculator.
      */
     public function add($c): ComplexCalculator
     {
@@ -62,7 +62,7 @@ class ComplexCalculator
      *
      * @return ComplexCalculator
      *
-     * @throws LogicException if the argument is not numeric or Complex.
+     * @throws LogicException Если аргумент не число или не экземпляр ComplexCalculator.
      */
     public function subtract($c): ComplexCalculator
     {
@@ -152,7 +152,7 @@ class ComplexCalculator
     }
 
     /**
-     * The absolute value (magnitude) of a complex number (modulus).
+     * Модуль.
      *
      * @return number
      */
