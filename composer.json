@@ -1,0 +1,32 @@
+{
+    "name": "CandidateExperiment/complex",
+    "description": "Complex number",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gavrilov Fedy",
+            "email": "fedor.gavrilov.75@mail.ru",
+            "homepage": "https://github.com/CandidateExperiment"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/CandidateExperiment/complex/issues",
+        "source": "https://github.com/CandidateExperiment/complex"
+    },
+    "autoload": {
+        "psr-4": {
+            "Candidate\\Calculator\\": "src"
+        }
+   },
+    "autoload-dev": {
+        "psr-4": {
+            "Candidate\\Tests\\": "tests"
+        }
+   },
+    "require": {
+        "phpunit/phpunit": "^7.5.2 || ^8.0 || ^9.0",
+        "mockery/mockery": "^1.4",
+        "fzaninotto/faker": "^1.9"
+    }
+}
