@@ -40,7 +40,7 @@ class ComplexCalculator
      *
      * @param float   $real      Реальная часть.
      * @param float   $imaginary Мнимая часть.
-     * @param boolean $argForm
+     * @param boolean $argForm   Тип аргументов: алгебраическая или тригонометрическая форма.
      */
     public function __construct(float $real, float $imaginary, bool $argForm = self::RECTANGULAR_FORM)
     {
@@ -146,9 +146,9 @@ class ComplexCalculator
             return new ComplexCalculator($real, $imaginary);
         } elseif ($c instanceof ComplexCalculator) {
             return $this->multiply($c->inverse());
-        } else {
-            throw new LogicException('Аргумент должен быть числом или экземпляром ComplexCalculator.');
         }
+
+        throw new LogicException('Аргумент должен быть числом или экземпляром ComplexCalculator.');
     }
 
     /**
@@ -194,10 +194,14 @@ class ComplexCalculator
      */
     public function polarForm(): self
     {
-        $r = $this->abs();
-        $arg = $this->arg();
+        if ($this->argForm === self::RECTANGULAR_FORM) {
+            $r = $this->abs();
+            $arg = $this->arg();
 
-        return $this->instanceSelf($r * cos($arg), $r * sin($arg));
+            return $this->instanceSelf($r * cos($arg), $r * sin($arg));
+        }
+
+        return $this;
     }
 
     /**
@@ -225,9 +229,9 @@ class ComplexCalculator
             return "$this->real";
         } elseif ($this->imaginary > 0) {
             return "$this->real" . ' + ' . "$this->imaginary" . 'i';
-        } else {
-            return "$this->real" . ' - ' . (string)abs($this->imaginary) . 'i';
         }
+
+        return "$this->real" . ' - ' . (string)abs($this->imaginary) . 'i';
     }
 
     /**
