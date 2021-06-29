@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Candidate\Tests;
 
 use Candidate\Calculator\ComplexCalculator;
@@ -18,12 +17,10 @@ class ComplexTest extends TestCase
      */
     public function testGet()
     {
-        // Given
         $r       = 1;
         $i       = 2;
-        $complex = new ComplexCalculator($r, $i);
+        $complex = new ComplexCalculator($r, $i, false);
 
-        // Then
         $this->assertEquals($r, $complex->real);
         $this->assertEquals($i, $complex->imaginary);
     }
