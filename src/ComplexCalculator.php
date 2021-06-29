@@ -171,7 +171,7 @@ class ComplexCalculator
         $r = $this->abs();
         $arg = $this->arg();
 
-        return $this->instanceSelf($r * cos($arg), $r * sin($arg));
+        return new ComplexCalculator ($r * cos($arg), $r * sin($arg));
     }
 
     /**
@@ -206,13 +206,16 @@ class ComplexCalculator
 
     /**
      * Инстанцировать новый экземпляр ComplexCalculator.
-     * @param float $real
-     * @param float $imaginary
+     *
+     * @param float $real      Реальная часть.
+     * @param float $imaginary Мнимая часть.
      *
      * @return ComplexCalculator
      */
     private function instanceSelf(float $real, float $imaginary) : ComplexCalculator
     {
-        return new ComplexCalculator($real, $imaginary);
+        $self =  new ComplexCalculator($real, $imaginary);
+        
+        return $self->polarForm();
     }
 }
