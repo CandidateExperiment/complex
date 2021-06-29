@@ -52,7 +52,7 @@ class ComplexCalculator
             throw new LogicException('Аргумент должен быть числом или экземпляром ComplexCalculator.');
         }
 
-        return new ComplexCalculator($real, $imaginary);
+        return $this->instanceSelf($real, $imaginary);
     }
 
     /**
@@ -76,7 +76,7 @@ class ComplexCalculator
             throw new LogicException('Аргумент должен быть числом или экземпляром ComplexCalculator.');
         }
 
-        return new ComplexCalculator($real, $imaginary);
+        return $this->instanceSelf($real, $imaginary);
     }
 
     /**
@@ -100,7 +100,7 @@ class ComplexCalculator
             throw new LogicException('Аргумент должен быть числом или экземпляром ComplexCalculator.');
         }
 
-        return new ComplexCalculator($real, $imaginary);
+        return $this->instanceSelf($real, $imaginary);
     }
 
     /**
@@ -148,7 +148,7 @@ class ComplexCalculator
      */
     public function complexConjugate(): ComplexCalculator
     {
-        return new ComplexCalculator($this->real, -1 * $this->imaginary);
+        return $this->instanceSelf($this->real, -1 * $this->imaginary);
     }
 
     /**
@@ -159,6 +159,29 @@ class ComplexCalculator
     public function abs()
     {
         return sqrt($this->real ** 2 + $this->imaginary ** 2);
+    }
+
+    /**
+     * Тригонометрическая форма комплексного числа.
+     *
+     * @return ComplexCalculator
+     */
+    public function polarForm(): ComplexCalculator
+    {
+        $r = $this->abs();
+        $arg = $this->arg();
+
+        return $this->instanceSelf($r * cos($arg), $r * sin($arg));
+    }
+
+    /**
+     * Аргумент комплексного числа.
+     *
+     * @return float
+     */
+    public function arg() : float
+    {
+        return atan2($this->imaginary, $this->real);
     }
 
     /**
@@ -177,7 +200,19 @@ class ComplexCalculator
         } elseif ($this->imaginary > 0) {
             return "$this->real" . ' + ' . "$this->imaginary" . 'i';
         } else {
-            return "$this->real" . ' - ' . (string) \abs($this->imaginary) . 'i';
+            return "$this->real" . ' - ' . (string)abs($this->imaginary) . 'i';
         }
+    }
+
+    /**
+     * Инстанцировать новый экземпляр ComplexCalculator.
+     * @param float $real
+     * @param float $imaginary
+     *
+     * @return ComplexCalculator
+     */
+    private function instanceSelf(float $real, float $imaginary) : ComplexCalculator
+    {
+        return new ComplexCalculator($real, $imaginary);
     }
 }

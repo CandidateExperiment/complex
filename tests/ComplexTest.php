@@ -549,4 +549,46 @@ class ComplexTest extends TestCase
 
         $complex->inverse();
     }
+
+    /**
+     * Тригонометрическая форма комплексного числа.
+     *
+     * @dataProvider dataProviderForPolarForm
+     *
+     * @param        number $r1
+     * @param        number $i1
+     * @param        number $r2
+     * @param        number $i2
+     *
+     * @return void
+     */
+    public function testPolarForm($r1, $i1, $r2, $i2) : void
+    {
+        $c        = new ComplexCalculator($r1, $i1);
+        $expected = new ComplexCalculator($r2, $i2);
+
+        $polar_form = $c->polarForm();
+
+        $this->assertEqualsWithDelta($expected->real, $polar_form->real, 0.00001);
+        $this->assertEqualsWithDelta($expected->imaginary, $polar_form->imaginary, 0.00001);
+    }
+
+    /**
+     * @return array
+     */
+    public function dataProviderForPolarForm(): array
+    {
+        return [
+            [5, 2, 5.3851648071 * cos(0.3805063771), 5.3851648071 *  sin(0.3805063771)],
+            [49.90, 25.42, 56.0016642610 * cos(0.4711542561), 56.0016642610 *  sin(0.4711542561)],
+            [-1, -1, 1.4142135624 * cos(-2.3561944902), 1.41421 *  sin(-2.3561944902)],
+            [1, 0, 1 * cos(0), 1 *  sin(0)],
+            [0, 1, 1 * cos(1.5707963268), 1 *  sin(1.5707963268)],
+            [0, 0, 0, 0],
+            [M_PI, 2, 3.7241917782 * cos(0.5669115049), 3.7241917782 *  sin(0.5669115049)],
+            [8, 9, 12.0415945788 * cos(0.8441539861), 12.0415945788 *  sin(0.8441539861)],
+            [814, -54, 815.7891884550 * cos(-0.0662420059), 815.7891884550 *  sin(-0.0662420059)],
+            [-5, -3, 5.8309518948 * cos(-2.6011731533), 5.8309518948 *  sin(-2.6011731533)],
+        ];
+    }
 }
