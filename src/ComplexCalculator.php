@@ -59,6 +59,32 @@ class ComplexCalculator
     }
 
     /**
+     * Статический конструктор для тригонометрической формы аргументов.
+     *
+     * @param float $real      Реальная часть.
+     * @param float $imaginary Мнимая часть.
+     *
+     * @return static
+     */
+    public static function fromPolar(float $real, float $imaginary) : self
+    {
+        return new self($real, $imaginary, self::POLAR_FORM);
+    }
+
+    /**
+     * Статический конструктор для алгебраической формы аргументов.
+     *
+     * @param float $real      Реальная часть.
+     * @param float $imaginary Мнимая часть.
+     *
+     * @return static
+     */
+    public static function fromRectangular(float $real, float $imaginary) : self
+    {
+        return new self($real, $imaginary, self::RECTANGULAR_FORM);
+    }
+
+    /**
      * Сложение.
      *
      * @param mixed $c
