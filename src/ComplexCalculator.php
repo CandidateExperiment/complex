@@ -169,7 +169,9 @@ class ComplexCalculator
         if (is_numeric($c)) {
             $real = $this->real / $c;
             $imaginary = $this->imaginary / $c;
-            return new ComplexCalculator($real, $imaginary);
+
+            return $this->instanceSelf($real, $imaginary);
+
         } elseif ($c instanceof ComplexCalculator) {
             return $this->multiply($c->inverse());
         }
