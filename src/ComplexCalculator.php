@@ -11,6 +11,16 @@ use LogicException;
 class ComplexCalculator
 {
     /**
+     * @const RECTANGULAR_FORM Алгебраическая форма.
+     */
+    public const RECTANGULAR_FORM = true;
+
+    /**
+     * @const POLAR_FORM Тригонометрическая форма.
+     */
+    public const POLAR_FORM = false;
+
+    /**
      * @var float $real Реальная часть.
      */
     public $real;
@@ -21,15 +31,31 @@ class ComplexCalculator
     public $imaginary;
 
     /**
+     * @var boolean Тип аргументов конструктора.
+     */
+    private $argForm;
+
+    /**
      * ComplexCalculator constructor.
      *
-     * @param float $real      Реальная часть.
-     * @param float $imaginary Мнимая часть.
+     * @param float   $real      Реальная часть.
+     * @param float   $imaginary Мнимая часть.
+     * @param boolean $argForm
      */
-    public function __construct(float $real, float $imaginary)
+    public function __construct(float $real, float $imaginary, bool $argForm = self::RECTANGULAR_FORM)
     {
         $this->real = $real;
         $this->imaginary = $imaginary;
+        $this->argForm = $argForm;
+
+        // Если алгебраическая форма, то преобразовать в тригонометрическую.
+        if ($argForm === self::RECTANGULAR_FORM) {
+            $r = $this->abs();
+            $arg = $this->arg();
+
+            $this->real = $r * cos($arg);
+            $this->imaginary = $r * sin($arg);
+        }
     }
 
     /**
@@ -37,10 +63,10 @@ class ComplexCalculator
      *
      * @param mixed $c
      *
-     * @return ComplexCalculator
+     * @return $this
      * @throws LogicException Если аргумент не число или не экземпляр ComplexCalculator.
      */
-    public function add($c): ComplexCalculator
+    public function add($c): self
     {
         if (is_numeric($c)) {
             $real = $this->real + $c;
@@ -60,11 +86,11 @@ class ComplexCalculator
      *
      * @param mixed $c
      *
-     * @return ComplexCalculator
+     * @return $this
      *
      * @throws LogicException Если аргумент не число или не экземпляр ComplexCalculator.
      */
-    public function subtract($c): ComplexCalculator
+    public function subtract($c): self
     {
         if (is_numeric($c)) {
             $real = $this->real - $c;
@@ -84,11 +110,11 @@ class ComplexCalculator
      *
      * @param mixed $c
      *
-     * @return ComplexCalculator
+     * @return $this
      *
      * @throws LogicException Если аргумент не число или не экземпляр ComplexCalculator.
      */
-    public function multiply($c): ComplexCalculator
+    public function multiply($c): self
     {
         if (is_numeric($c)) {
             $real = $c * $this->real;
@@ -112,7 +138,7 @@ class ComplexCalculator
      *
      * @throws LogicException Если аргумент не число или не экземпляр ComplexCalculator.
      */
-    public function divide($c): ComplexCalculator
+    public function divide($c): self
     {
         if (is_numeric($c)) {
             $real = $this->real / $c;
@@ -128,11 +154,11 @@ class ComplexCalculator
     /**
      * Инверсия.
      *
-     * @return ComplexCalculator
+     * @return $this
      *
      * @throws LogicException
      */
-    public function inverse(): ComplexCalculator
+    public function inverse(): self
     {
         if ($this->real == 0 && $this->imaginary == 0) {
             throw new LogicException('Инверсия невозможна');
@@ -144,9 +170,9 @@ class ComplexCalculator
     /**
      * Сопряжение.
      *
-     * @return ComplexCalculator
+     * @return $this
      */
-    public function complexConjugate(): ComplexCalculator
+    public function complexConjugate(): self
     {
         return $this->instanceSelf($this->real, -1 * $this->imaginary);
     }
@@ -164,14 +190,14 @@ class ComplexCalculator
     /**
      * Тригонометрическая форма комплексного числа.
      *
-     * @return ComplexCalculator
+     * @return $this
      */
-    public function polarForm(): ComplexCalculator
+    public function polarForm(): self
     {
         $r = $this->abs();
         $arg = $this->arg();
 
-        return new ComplexCalculator ($r * cos($arg), $r * sin($arg));
+        return $this->instanceSelf($r * cos($arg), $r * sin($arg));
     }
 
     /**
@@ -210,12 +236,10 @@ class ComplexCalculator
      * @param float $real      Реальная часть.
      * @param float $imaginary Мнимая часть.
      *
-     * @return ComplexCalculator
+     * @return $this
      */
-    private function instanceSelf(float $real, float $imaginary) : ComplexCalculator
+    private function instanceSelf(float $real, float $imaginary) : self
     {
-        $self =  new ComplexCalculator($real, $imaginary);
-        
-        return $self->polarForm();
+        return new static($real, $imaginary, $this->argForm);
     }
 }
