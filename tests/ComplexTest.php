@@ -19,7 +19,7 @@ class ComplexTest extends TestCase
     {
         $r       = 1;
         $i       = 2;
-        $complex = new ComplexCalculator($r, $i, false);
+        $complex = new ComplexCalculator($r, $i);
 
         $this->assertEquals($r, $complex->real);
         $this->assertEquals($i, $complex->imaginary);
@@ -28,8 +28,8 @@ class ComplexTest extends TestCase
     /**
      * @dataProvider dataProviderForComplexConjugate
      *
-     * @param        number $real
-     * @param        number $imaginary
+     * @param number $real
+     * @param number $imaginary
      *
      * @return void
      */
@@ -568,6 +568,27 @@ class ComplexTest extends TestCase
 
         $this->assertEqualsWithDelta($expected->real, $polar_form->real, 0.00001);
         $this->assertEqualsWithDelta($expected->imaginary, $polar_form->imaginary, 0.00001);
+    }
+
+    /**
+     * Тригонометрическая форма комплексного числа.
+     *
+     * @dataProvider dataProviderForPolarForm
+     *
+     * @param        number $r1
+     * @param        number $i1
+     * @param        number $r2
+     * @param        number $i2
+     *
+     * @return void
+     */
+    public function testPolarFormConvertion($r1, $i1, $r2, $i2) : void
+    {
+        $c        = new ComplexCalculator($r1, $i1, ComplexCalculator::RECTANGULAR_FORM);
+        $expected = new ComplexCalculator($r2, $i2, ComplexCalculator::POLAR_FORM);
+
+        $this->assertEqualsWithDelta($expected->real, $c->real, 0.00001);
+        $this->assertEqualsWithDelta($expected->imaginary, $c->imaginary, 0.00001);
     }
 
     /**
