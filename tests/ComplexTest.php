@@ -841,7 +841,7 @@ class ComplexTest extends TestCase
         $c = $this->getTestObject(Complex::class, $r1, $i1);
         $expected = $this->getTestObject(Complex::class, $r2, $i2);
 
-        $polar_form = $c->polarForm();
+        $polar_form = $c->polarForm($r1, $i1);
 
         $this->assertEqualsWithDelta($expected->real, $polar_form->real, 0.00001);
         $this->assertEqualsWithDelta($expected->imaginary, $polar_form->imaginary, 0.00001);

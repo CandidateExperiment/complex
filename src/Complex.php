@@ -25,15 +25,4 @@ class Complex extends ComplexCalculatorAbstract
         $this->real = $r * cos($arg);
         $this->imaginary = $r * sin($arg);
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function polarForm(): self
-    {
-            $r = $this->abs();
-            $arg = $this->arg();
-
-            return new static($r * cos($arg), $r * sin($arg));
-    }
 }

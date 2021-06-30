@@ -8,7 +8,7 @@ use LogicException;
  * Class ComplexCalculatorBase
  * @package Candidate\Calculator
  */
-abstract class ComplexCalculatorAbstract
+class ComplexCalculatorAbstract
 {
     /**
      * @var float $real Реальная часть.
@@ -31,13 +31,6 @@ abstract class ComplexCalculatorAbstract
         $this->real = $real;
         $this->imaginary = $imaginary;
      }
-
-    /**
-     * Тригонометрическая форма комплексного числа.
-     *
-     * @return $this
-     */
-    abstract function polarForm();
 
     /**
      * Сложение.
@@ -198,6 +191,25 @@ abstract class ComplexCalculatorAbstract
         }
 
         return "$this->real" . ' - ' . (string)abs($this->imaginary) . 'i';
+    }
+
+    /**
+     * Тригонометрическая форма из алгебраической.
+     *
+     * @param float   $real      Реальная часть.
+     * @param float   $imaginary Мнимая часть.
+     *
+     * @return $this
+     */
+    public function polarForm(float $real, float $imaginary): self
+    {
+        $this->real = $real;
+        $this->imaginary = $imaginary;
+
+        $r = $this->abs();
+        $arg = $this->arg();
+
+        return new static($r * cos($arg), $r * sin($arg));
     }
 
     /**

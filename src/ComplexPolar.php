@@ -8,11 +8,5 @@ namespace Candidate\Calculator;
  */
 class ComplexPolar extends ComplexCalculatorAbstract
 {
-    /**
-     * @inheritDoc
-     */
-    public function polarForm(): self
-    {
-        return $this;
-    }
+
 }
