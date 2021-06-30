@@ -9,9 +9,7 @@ namespace Candidate\Calculator;
 class ComplexPolar extends ComplexCalculatorAbstract
 {
     /**
-     * Тригонометрическая форма комплексного числа.
-     *
-     * @return $this
+     * @inheritDoc
      */
     public function polarForm(): self
     {
