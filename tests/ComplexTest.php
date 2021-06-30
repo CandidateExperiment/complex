@@ -3,6 +3,8 @@
 namespace Candidate\Tests;
 
 use Candidate\Calculator\Complex;
+use Candidate\Calculator\ComplexCalculatorAbstract;
+use Candidate\Calculator\ComplexPolar;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 
@@ -15,11 +17,24 @@ class ComplexTest extends TestCase
     /**
      * __get.
      */
-    public function testGet()
+    public function testGet() : void
     {
         $r       = 1;
         $i       = 2;
-        $complex = new Complex($r, $i);
+        $complex = $this->getTestObject(Complex::class, $r, $i);
+
+        $this->assertEquals($r, $complex->real);
+        $this->assertEquals($i, $complex->imaginary);
+    }
+
+    /**
+     * __get. Тригонометрическая форма.
+     */
+    public function testGetPolar() : void
+    {
+        $r       = 1;
+        $i       = 2;
+        $complex = $this->getTestObject(ComplexPolar::class, $r, $i);
 
         $this->assertEquals($r, $complex->real);
         $this->assertEquals($i, $complex->imaginary);
@@ -35,7 +50,26 @@ class ComplexTest extends TestCase
      */
     public function testComplexConjugate($real, $imaginary) : void
     {
-        $c = new Complex($real, $imaginary);
+        $c = $this->getTestObject(Complex::class, $real, $imaginary);
+
+        $cc = $c->complexConjugate();
+
+        $this->assertEquals($c->real, $cc->real);
+        $this->assertEquals($c->imaginary, -1 * $cc->imaginary);
+    }
+
+    /**
+     * @dataProvider dataProviderForComplexConjugate
+     *
+     * @param number $real
+     * @param number $imaginary
+     *
+     * @return void
+     */
+    public function testComplexConjugatePolar($real, $imaginary) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $real, $imaginary);
+
         $cc = $c->complexConjugate();
 
         $this->assertEquals($c->real, $cc->real);
@@ -67,7 +101,24 @@ class ComplexTest extends TestCase
      */
     public function testAbs($r, $i, $expected) : void
     {
-        $c = new Complex($r, $i);
+        $c = $this->getTestObject(Complex::class, $r, $i);
+
+        $abs = $c->abs();
+
+        $this->assertEquals($expected, $abs);
+    }
+
+    /**
+     * @dataProvider dataProviderForAbs
+     * @param number $r
+     * @param number $i
+     * @param number $expected
+     *
+     * @return void
+     */
+    public function testAbsPolar($r, $i, $expected) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $r, $i);
 
         $abs = $c->abs();
 
@@ -95,7 +146,6 @@ class ComplexTest extends TestCase
     }
 
     /**
-     *
      * Сложение.
      *
      * @dataProvider dataProviderForAdd
@@ -105,8 +155,27 @@ class ComplexTest extends TestCase
      */
     public function testAdd(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new Complex($complex1['r'], $complex1['i']);
-        $c2 = new Complex($complex2['r'], $complex2['i']);
+        $c1 = $this->getTestObject(Complex::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(Complex::class, $complex2['r'], $complex2['i']);
+
+        $result = $c1->add($c2);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * Сложение. Тригонометрическая форма.
+     *
+     * @dataProvider dataProviderForAdd
+     * @param        array  $complex1
+     * @param        array  $complex2
+     * @param        array  $expected
+     */
+    public function testAddPolar(array $complex1, array $complex2, array $expected) : void
+    {
+        $c1 = $this->getTestObject(ComplexPolar::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(ComplexPolar::class, $complex2['r'], $complex2['i']);
 
         $result = $c1->add($c2);
 
@@ -154,7 +223,26 @@ class ComplexTest extends TestCase
      */
     public function testAddReal($complex, $real, $expected) : void
     {
-        $c = new Complex($complex['r'], $complex['i']);
+        $c = $this->getTestObject(Complex::class, $complex['r'], $complex['i']);
+
+        $result = $c->add($real);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * @dataProvider dataProviderForAddReal
+     *
+     * @param $complex
+     * @param $real
+     * @param $expected
+     *
+     * @return void
+     */
+    public function testAddRealPolar($complex, $real, $expected) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $complex['r'], $complex['i']);
 
         $result = $c->add($real);
 
@@ -196,8 +284,8 @@ class ComplexTest extends TestCase
      */
     public function testSubtract(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new Complex($complex1['r'], $complex1['i']);
-        $c2 = new Complex($complex2['r'], $complex2['i']);
+        $c1 = $this->getTestObject(Complex::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(Complex::class, $complex2['r'], $complex2['i']);
 
         $result = $c1->subtract($c2);
 
@@ -239,6 +327,24 @@ class ComplexTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider dataProviderForSubtract
+     * @param        array  $complex1
+     * @param        array  $complex2
+     * @param        array  $expected
+     *
+     * @return void
+     */
+    public function testSubtractPolar(array $complex1, array $complex2, array $expected) : void
+    {
+        $c1 = $this->getTestObject(ComplexPolar::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(ComplexPolar::class, $complex2['r'], $complex2['i']);
+
+        $result = $c1->subtract($c2);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
 
     /**
      * @dataProvider dataProviderForSubtractReal
@@ -250,7 +356,25 @@ class ComplexTest extends TestCase
      */
     public function testSubtractReal($complex, $real, $expected) : void
     {
-        $c = new Complex($complex['r'], $complex['i']);
+        $c = $this->getTestObject(Complex::class, $complex['r'], $complex['i']);
+
+        $result = $c->subtract($real);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * @dataProvider dataProviderForSubtractReal
+     * @param $complex
+     * @param $real
+     * @param $expected
+     *
+     * @return void
+     */
+    public function testSubtractRealPolar($complex, $real, $expected) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $complex['r'], $complex['i']);
 
         $result = $c->subtract($real);
 
@@ -292,8 +416,27 @@ class ComplexTest extends TestCase
      */
     public function testMultiply(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new Complex($complex1['r'], $complex1['i']);
-        $c2 = new Complex($complex2['r'], $complex2['i']);
+        $c1 = $this->getTestObject(Complex::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(Complex::class, $complex2['r'], $complex2['i']);
+
+        $result = $c1->multiply($c2);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * @dataProvider dataProviderForMultiply
+     * @param        array  $complex1
+     * @param        array  $complex2
+     * @param        array  $expected
+     *
+     * @return void
+     */
+    public function testMultiplyPolar(array $complex1, array $complex2, array $expected) : void
+    {
+        $c1 = $this->getTestObject(ComplexPolar::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(ComplexPolar::class, $complex2['r'], $complex2['i']);
 
         $result = $c1->multiply($c2);
 
@@ -340,7 +483,25 @@ class ComplexTest extends TestCase
      */
     public function testMultiplyReal($complex, $real, $expected) : void
     {
-        $c = new Complex($complex['r'], $complex['i']);
+        $c = $this->getTestObject(Complex::class, $complex['r'], $complex['i']);
+
+        $result = $c->multiply($real);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * @dataProvider dataProviderForMultiplyReal
+     * @param $complex
+     * @param $real
+     * @param $expected
+     *
+     * @return void
+     */
+    public function testMultiplyRealPolar($complex, $real, $expected) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $complex['r'], $complex['i']);
 
         $result = $c->multiply($real);
 
@@ -379,8 +540,29 @@ class ComplexTest extends TestCase
      */
     public function testDivide(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new Complex($complex1['r'], $complex1['i']);
-        $c2 = new Complex($complex2['r'], $complex2['i']);
+        $c1 = $this->getTestObject(Complex::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(Complex::class, $complex2['r'], $complex2['i']);
+
+        $result = $c1->divide($c2);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * Деление. Тригонометрическая форма.
+     *
+     * @dataProvider dataProviderForDivide
+     * @param        array  $complex1
+     * @param        array  $complex2
+     * @param        array  $expected
+     *
+     * @return void
+     */
+    public function testDividePolar(array $complex1, array $complex2, array $expected) : void
+    {
+        $c1 = $this->getTestObject(ComplexPolar::class, $complex1['r'], $complex1['i']);
+        $c2 = $this->getTestObject(ComplexPolar::class, $complex2['r'], $complex2['i']);
 
         $result = $c1->divide($c2);
 
@@ -429,7 +611,27 @@ class ComplexTest extends TestCase
      */
     public function testDivideReal($complex, $real, $expected) : void
     {
-        $c = new Complex($complex['r'], $complex['i']);
+        $c = $this->getTestObject(Complex::class, $complex['r'], $complex['i']);
+
+        $result = $c->divide($real);
+
+        $this->assertEquals($expected['r'], $result->real);
+        $this->assertEquals($expected['i'], $result->imaginary);
+    }
+
+    /**
+     * Деление. Тригонометрическая форма.
+     *
+     * @dataProvider dataProviderForDivideReal
+     * @param $complex
+     * @param $real
+     * @param $expected
+     *
+     * @return void
+     */
+    public function testDivideRealPolar($complex, $real, $expected) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $complex['r'], $complex['i']);
 
         $result = $c->divide($real);
 
@@ -463,7 +665,21 @@ class ComplexTest extends TestCase
      */
     public function testComplexAddException() : void
     {
-        $complex = new Complex(1, 1);
+        $complex = $this->getTestObject(Complex::class, 1, 1);
+
+        $this->expectException(LogicException::class);
+
+        $complex->add("string");
+    }
+
+    /**
+     * Неверный формат аргументов сложения. Тригонометрическая форма.
+     *
+     * @return void
+     */
+    public function testComplexAddPolarException() : void
+    {
+        $complex = $this->getTestObject(ComplexPolar::class, 1, 1);
 
         $this->expectException(LogicException::class);
 
@@ -477,7 +693,21 @@ class ComplexTest extends TestCase
      */
     public function testComplexSubtractException() : void
     {
-        $complex = new Complex(1, 1);
+        $complex = $this->getTestObject(Complex::class, 1, 1);
+
+        $this->expectException(LogicException::class);
+
+        $complex->add("string");
+    }
+
+    /**
+     * Неверный формат аргументов вычитания. Тригонометрическая форма.
+     *
+     * @return void
+     */
+    public function testComplexSubtractPolarException() : void
+    {
+        $complex = $this->getTestObject(ComplexPolar::class, 1, 1);
 
         $this->expectException(LogicException::class);
 
@@ -491,7 +721,21 @@ class ComplexTest extends TestCase
      */
     public function testComplexMultiplyException() : void
     {
-        $complex = new Complex(1, 1);
+        $complex = $this->getTestObject(Complex::class, 1, 1);
+
+        $this->expectException(LogicException::class);
+
+        $complex->add("string");
+    }
+
+    /**
+     * Неверный формат аргументов деления. Тригонометрическая форма.
+     *
+     * @return void
+     */
+    public function testComplexMultiplyPolarException() : void
+    {
+        $complex = $this->getTestObject(ComplexPolar::class, 1, 1);
 
         $this->expectException(LogicException::class);
 
@@ -509,7 +753,26 @@ class ComplexTest extends TestCase
      */
     public function testInverse($r, $i, $expected_r, $expected_i) : void
     {
-        $c = new Complex($r, $i);
+        $c = $this->getTestObject(Complex::class, $r, $i);
+
+        $inverse = $c->inverse();
+
+        $this->assertEquals($expected_r, $inverse->real);
+        $this->assertEquals($expected_i, $inverse->imaginary);
+    }
+
+    /**
+     * @dataProvider dataProviderForInverse
+     * @param        number $r
+     * @param        number $i
+     * @param        number $expected_r
+     * @param        number $expected_i
+     *
+     * @return void
+     */
+    public function testInversePolar($r, $i, $expected_r, $expected_i) : void
+    {
+        $c = $this->getTestObject(ComplexPolar::class, $r, $i);
 
         $inverse = $c->inverse();
 
@@ -540,7 +803,21 @@ class ComplexTest extends TestCase
      */
     public function testInverseException()
     {
-        $complex = new Complex(0, 0);
+        $complex = $this->getTestObject(Complex::class, 0, 0);
+
+        $this->expectException(LogicException::class);
+
+        $complex->inverse();
+    }
+
+    /**
+     * Неверный формат аргументов инверсии. Тригонометрическая форма.
+     *
+     * @return void
+     */
+    public function testInversePolarException()
+    {
+        $complex = $this->getTestObject(ComplexPolar::class, 0, 0);
 
         $this->expectException(LogicException::class);
 
@@ -561,8 +838,8 @@ class ComplexTest extends TestCase
      */
     public function testPolarForm($r1, $i1, $r2, $i2) : void
     {
-        $c        = new Complex($r1, $i1);
-        $expected = new Complex($r2, $i2);
+        $c = $this->getTestObject(Complex::class, $r1, $i1);
+        $expected = $this->getTestObject(Complex::class, $r2, $i2);
 
         $polar_form = $c->polarForm();
 
@@ -584,8 +861,8 @@ class ComplexTest extends TestCase
      */
     public function testPolarFormConvertion($r1, $i1, $r2, $i2) : void
     {
-        $c        = new Complex($r1, $i1);
-        $expected = new Complex($r2, $i2);
+        $c = $this->getTestObject(Complex::class, $r1, $i1);
+        $expected = $this->getTestObject(Complex::class, $r2, $i2);
 
         $this->assertEqualsWithDelta($expected->real, $c->real, 0.00001);
         $this->assertEqualsWithDelta($expected->imaginary, $c->imaginary, 0.00001);
@@ -608,5 +885,19 @@ class ComplexTest extends TestCase
             [814, -54, 815.7891884550 * cos(-0.0662420059), 815.7891884550 *  sin(-0.0662420059)],
             [-5, -3, 5.8309518948 * cos(-2.6011731533), 5.8309518948 *  sin(-2.6011731533)],
         ];
+    }
+
+    /**
+     * Создать тестовый объект.
+     *
+     * @param string $class     Класс.
+     * @param float  $real      Реальное значение.
+     * @param float  $imaginary Мнимое значение.
+     *
+     * @return ComplexCalculatorAbstract
+     */
+    private function getTestObject(string $class, float $real, float $imaginary): ComplexCalculatorAbstract
+    {
+        return new $class($real, $imaginary);
     }
 }
