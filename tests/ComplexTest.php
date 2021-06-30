@@ -2,7 +2,7 @@
 
 namespace Candidate\Tests;
 
-use Candidate\Calculator\ComplexCalculator;
+use Candidate\Calculator\Complex;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class ComplexTest extends TestCase
     {
         $r       = 1;
         $i       = 2;
-        $complex = new ComplexCalculator($r, $i);
+        $complex = new Complex($r, $i);
 
         $this->assertEquals($r, $complex->real);
         $this->assertEquals($i, $complex->imaginary);
@@ -35,7 +35,7 @@ class ComplexTest extends TestCase
      */
     public function testComplexConjugate($real, $imaginary) : void
     {
-        $c = new ComplexCalculator($real, $imaginary);
+        $c = new Complex($real, $imaginary);
         $cc = $c->complexConjugate();
 
         $this->assertEquals($c->real, $cc->real);
@@ -67,7 +67,7 @@ class ComplexTest extends TestCase
      */
     public function testAbs($r, $i, $expected) : void
     {
-        $c = new ComplexCalculator($r, $i);
+        $c = new Complex($r, $i);
 
         $abs = $c->abs();
 
@@ -105,8 +105,8 @@ class ComplexTest extends TestCase
      */
     public function testAdd(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new ComplexCalculator($complex1['r'], $complex1['i']);
-        $c2 = new ComplexCalculator($complex2['r'], $complex2['i']);
+        $c1 = new Complex($complex1['r'], $complex1['i']);
+        $c2 = new Complex($complex2['r'], $complex2['i']);
 
         $result = $c1->add($c2);
 
@@ -154,7 +154,7 @@ class ComplexTest extends TestCase
      */
     public function testAddReal($complex, $real, $expected) : void
     {
-        $c = new ComplexCalculator($complex['r'], $complex['i']);
+        $c = new Complex($complex['r'], $complex['i']);
 
         $result = $c->add($real);
 
@@ -196,8 +196,8 @@ class ComplexTest extends TestCase
      */
     public function testSubtract(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new ComplexCalculator($complex1['r'], $complex1['i']);
-        $c2 = new ComplexCalculator($complex2['r'], $complex2['i']);
+        $c1 = new Complex($complex1['r'], $complex1['i']);
+        $c2 = new Complex($complex2['r'], $complex2['i']);
 
         $result = $c1->subtract($c2);
 
@@ -250,7 +250,7 @@ class ComplexTest extends TestCase
      */
     public function testSubtractReal($complex, $real, $expected) : void
     {
-        $c = new ComplexCalculator($complex['r'], $complex['i']);
+        $c = new Complex($complex['r'], $complex['i']);
 
         $result = $c->subtract($real);
 
@@ -292,8 +292,8 @@ class ComplexTest extends TestCase
      */
     public function testMultiply(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new ComplexCalculator($complex1['r'], $complex1['i']);
-        $c2 = new ComplexCalculator($complex2['r'], $complex2['i']);
+        $c1 = new Complex($complex1['r'], $complex1['i']);
+        $c2 = new Complex($complex2['r'], $complex2['i']);
 
         $result = $c1->multiply($c2);
 
@@ -340,7 +340,7 @@ class ComplexTest extends TestCase
      */
     public function testMultiplyReal($complex, $real, $expected) : void
     {
-        $c = new ComplexCalculator($complex['r'], $complex['i']);
+        $c = new Complex($complex['r'], $complex['i']);
 
         $result = $c->multiply($real);
 
@@ -379,8 +379,8 @@ class ComplexTest extends TestCase
      */
     public function testDivide(array $complex1, array $complex2, array $expected) : void
     {
-        $c1 = new ComplexCalculator($complex1['r'], $complex1['i']);
-        $c2 = new ComplexCalculator($complex2['r'], $complex2['i']);
+        $c1 = new Complex($complex1['r'], $complex1['i']);
+        $c2 = new Complex($complex2['r'], $complex2['i']);
 
         $result = $c1->divide($c2);
 
@@ -429,7 +429,7 @@ class ComplexTest extends TestCase
      */
     public function testDivideReal($complex, $real, $expected) : void
     {
-        $c = new ComplexCalculator($complex['r'], $complex['i']);
+        $c = new Complex($complex['r'], $complex['i']);
 
         $result = $c->divide($real);
 
@@ -463,7 +463,7 @@ class ComplexTest extends TestCase
      */
     public function testComplexAddException() : void
     {
-        $complex = new ComplexCalculator(1, 1);
+        $complex = new Complex(1, 1);
 
         $this->expectException(LogicException::class);
 
@@ -477,7 +477,7 @@ class ComplexTest extends TestCase
      */
     public function testComplexSubtractException() : void
     {
-        $complex = new ComplexCalculator(1, 1);
+        $complex = new Complex(1, 1);
 
         $this->expectException(LogicException::class);
 
@@ -491,7 +491,7 @@ class ComplexTest extends TestCase
      */
     public function testComplexMultiplyException() : void
     {
-        $complex = new ComplexCalculator(1, 1);
+        $complex = new Complex(1, 1);
 
         $this->expectException(LogicException::class);
 
@@ -509,7 +509,7 @@ class ComplexTest extends TestCase
      */
     public function testInverse($r, $i, $expected_r, $expected_i) : void
     {
-        $c = new ComplexCalculator($r, $i);
+        $c = new Complex($r, $i);
 
         $inverse = $c->inverse();
 
@@ -540,7 +540,7 @@ class ComplexTest extends TestCase
      */
     public function testInverseException()
     {
-        $complex = new ComplexCalculator(0, 0);
+        $complex = new Complex(0, 0);
 
         $this->expectException(LogicException::class);
 
@@ -561,8 +561,8 @@ class ComplexTest extends TestCase
      */
     public function testPolarForm($r1, $i1, $r2, $i2) : void
     {
-        $c        = new ComplexCalculator($r1, $i1);
-        $expected = new ComplexCalculator($r2, $i2);
+        $c        = new Complex($r1, $i1);
+        $expected = new Complex($r2, $i2);
 
         $polar_form = $c->polarForm();
 
@@ -584,8 +584,8 @@ class ComplexTest extends TestCase
      */
     public function testPolarFormConvertion($r1, $i1, $r2, $i2) : void
     {
-        $c        = new ComplexCalculator($r1, $i1, ComplexCalculator::RECTANGULAR_FORM);
-        $expected = new ComplexCalculator($r2, $i2, ComplexCalculator::POLAR_FORM);
+        $c        = new Complex($r1, $i1);
+        $expected = new Complex($r2, $i2);
 
         $this->assertEqualsWithDelta($expected->real, $c->real, 0.00001);
         $this->assertEqualsWithDelta($expected->imaginary, $c->imaginary, 0.00001);
